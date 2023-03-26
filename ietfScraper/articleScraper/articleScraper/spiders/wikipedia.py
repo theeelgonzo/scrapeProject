@@ -7,12 +7,15 @@ class WikipediaSpider(CrawlSpider):
     allowed_domains = ['en.wikipedia.org']
     start_urls = ['https://en.wikipedia.org/wiki/Kevin_Bacon']
 
-    rules = [Rule(LinkExtractor(allow=r'wiki/((>!:).)*$'), callback='parse_info', follow=True)]
+    rules = [Rule(LinkExtractor(allow=r'wiki/((?!:).)*$'), callback='parse_info', follow=True)]
     
     def parse(self, response):
+        title = response.xpath('//h1/text()').get() or response.xpath('//h1/i/text()').get()
+        url = response.url
+        lastEdit = response.xpath('//li[@id="footer-info-lastmod"]/text()').get()
         return {
-            'title': response.xpath('//h1/text()').get() or response.xpath('//h1/i/text()').get(),
-            'url': response.url,
-            'last edited': response.xpath('//li[@id="footer-info-lastmod"]/text()').get()
+            'title': title,
+            'url': url,
+            'last edited': lastEdit,
         }
         pass
