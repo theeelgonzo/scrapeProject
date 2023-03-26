@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from articleScraper.items import Article
 
 class WikipediaSpider(CrawlSpider):
     name = 'wikipedia'
@@ -10,12 +11,9 @@ class WikipediaSpider(CrawlSpider):
     rules = [Rule(LinkExtractor(allow=r'wiki/((?!:).)*$'), callback='parse_info', follow=True)]
     
     def parse(self, response):
-        title = response.xpath('//h1/text()').get() or response.xpath('//h1/i/text()').get()
-        url = response.url
-        lastEdit = response.xpath('//li[@id="footer-info-lastmod"]/text()').get()
-        return {
-            'title': title,
-            'url': url,
-            'last edited': lastEdit,
-        }
-        pass
+        article = Article()
+
+        article['title'] = response.xpath('//h1/text()').get() or response.xpath('//h1/i/text()').get()
+        article['url'] = response.url
+        article['lastUpdated'] = response.xpath('//li[@id="footer-info-lastmod"]/text()').get()
+        return article
