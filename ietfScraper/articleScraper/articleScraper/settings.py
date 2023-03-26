@@ -9,6 +9,11 @@
 
 BOT_NAME = 'articleScraper'
 
+CLOSESPIDER_PAGECOUNT=10
+
+FEED_URI='articles.cs'
+FEED_FORMAT='json'
+
 SPIDER_MODULES = ['articleScraper.spiders']
 NEWSPIDER_MODULE = 'articleScraper.spiders'
 
